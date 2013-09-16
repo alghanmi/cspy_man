@@ -1,3 +1,7 @@
+#Configuration files
+cspy_man.conf.ini
+
+#Compiled files
 *.py[cod]
 
 #Log files
