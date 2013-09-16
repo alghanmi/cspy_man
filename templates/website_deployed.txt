@@ -1,0 +1,20 @@
+## Email template to confirm deployment of website
+#
+#SUBJECT: Course Website Deployed at $TIMESTAMP$
+Greetings from c(s, py | man),
+
+Your recent update to the <a href="$REPO_URL$">$REPO_NAME$</a> repository triggered the website to be re-generated and deployed. Please visit the website to confirm that the changes were properly applied.
+
+The changes up to commit <a href="$COMMIT_URL$">$COMMIT_ID$</a> dated $COMMIT_TIMESTAMP$ were applied to the website before it was deployed.
+
+You are receiving this email because the commit had the following author information:
+	Name: $AUTHOR_NAME$
+	E-Mail: $AUTHOR_EMAIL$
+	GitHub Username: $GH_USERNAME$
+
+For diagnostic reasons, the following is a log of the script output:
+	<code>$SCRIPT_LOG$</code>
+
+Take care,
+Rami's bot
+
