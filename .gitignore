@@ -1,0 +1,10 @@
+*.py[cod]
+
+#Log files
+*.log
+
+#Editor files
+.*.sw[a-z]
+*~
+\#*\#
+
