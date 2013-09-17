@@ -23,3 +23,11 @@ This is written as a git [post-receive hook](https://help.github.com/articles/po
   1. The [head] commit is parsed.
   1. The `website_deploy.sh` script is executed.
   1. An email using the `website_deployed.txt` template is prepared
+
+####Deployment script
+`website_deploy.sh` is written to be compatible with `aludra.usc.edu` and must have the following variables properly set:
+  + `WEBSITE_REPO` - [course_website](https://github.com/usc-csci201-fall2013/course_website) git repo
+    * `www-data` must have read/write access to the repo
+  + `SSH_REMOTE_USER` - username on `aludra`
+  + `SSH_REMOTE_SERVER` - default: `aludra.usc.edu`
+  + `SSH_REMOTE_IDENTITY` - private ssh key to access aludra with **no passphrase**
