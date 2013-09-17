@@ -22,7 +22,7 @@ class mailer:
 	
 	def session_start(self):
 		self.session = smtplib.SMTP(self.conf.email_server, self.conf.email_port)
-		self.session.set_debuglevel(True)
+		#self.session.set_debuglevel(True)
 		self.session.ehlo()
 		self.session.starttls()
 		self.session.ehlo
