@@ -1,7 +1,6 @@
 #!/bin/bash
 
 WEBSITE_REPO=/home/rami/course_website
-LOG_FILE=/home/rami/course_website.log
 SCRIPT_TIMESTAMP=$(date +%Y-%m-%d_%H%M%S)
 
 SSH_REMOTE_USER='csci201'
