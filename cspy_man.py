@@ -32,7 +32,9 @@ def deploy():
 	if request.method == 'POST':
 		''' POST Request processing '''
 		#Parse GitHub payload
-		payload = github_payload(simplejson.loads(request.data))
+		post_data = simplejson.loads(request.form['payload'])
+		#app.logger.debug(post_data)
+		payload = github_payload(post_data)
 		
 		''' Execute deployment script '''
 		try:
@@ -57,7 +59,7 @@ def deploy():
 		tags['AUTHOR_NAME'] = payload.author_name
 		tags['AUTHOR_EMAIL'] = payload.author_email
 		tags['GH_USERNAME'] = payload.author_gh_username
-		tags['SCRIPT_LOG'] = output
+		tags['SCRIPT_LOG'] = output.replace('\n', '<br/>').replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;')
 		
 		tp = template_parser(conf.templates['website_deploy'])
 		tp.replace(tags)
