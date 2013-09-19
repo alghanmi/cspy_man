@@ -26,6 +26,10 @@ This is written as a git [post-receive hook](https://help.github.com/articles/po
 
 ####Deployment script
 `website_deploy.sh` is written to be compatible with `aludra.usc.edu` and must have the following variables properly set:
+  + `$HOME` directory for the `www-data` user. You can set that by
+```
+sudo usermod -d /home/www www-data
+```
   + `WEBSITE_REPO` - [course_website](https://github.com/usc-csci201-fall2013/course_website) git repo
     * `www-data` must have read/write access to the repo
 ```shell
@@ -34,26 +38,22 @@ cd course_website
 git checkout -b deploy remotes/origin/deploy
 git checkout master
 cd ..
-sudo mkdir -p /home/www/usc.alghanmi.org/cspy_man_workspace
-sudo mv course_website /home/www/usc.alghanmi.org/cspy_man_workspace/
-sudo chown -R www-data:www-data /home/www/usc.alghanmi.org/cspy_man_workspace/
+export WORKSPACE=/home/www/usc.alghanmi.org/cspy_man_workspace
+sudo mkdir -p $WORKSPACE
+sudo mv course_website $WORKSPACE
+sudo chown -R www-data:www-data $WORKSPACE
 ```
   + `SSH_REMOTE_USER` - username on `aludra`
   + `SSH_REMOTE_SERVER` - default: `aludra.usc.edu`
-  + `SSH_REMOTE_IDENTITY` - private ssh key to access aludra & GitHub with **no passphrase**
+  + Generate SSH Keys for `www-data` (with **no passphrase**)
 ```shell
-sudo mkdir -p /home/www/usc.alghanmi.org/cspy_man_workspace/.ssh
-sudo chmod 700 /home/www/usc.alghanmi.org/cspy_man_workspace/.ssh
-
-## Copy over the ssh keys to this location
-
-
-echo '#!/bin/sh' | sudo tee /home/www/usc.alghanmi.org/cspy_man_workspace/ssh_git.sh
-echo 'exec /usr/bin/ssh -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /home/www/usc.alghanmi.org/cspy_man_workspace/.ssh/alghanmi-bot "$@" > /dev/null' | sudo tee -a /home/www/usc.alghanmi.org/cspy_man_workspace/ssh_git.sh
-sudo chmod 755 /home/www/usc.alghanmi.org/cspy_man_workspace/ssh_git.sh
-sudo chown -R www-data:www-data /home/www/usc.alghanmi.org/cspy_man_workspace/
+#Generate Keyparis
+ssh-keygen -t rsa -b 4096 -C "www-data@$(hostname -f)"
 ```
-
+  + Add the public key to [GitHub](https://github.com/settings/ssh) and aludra's authorized keys
+```
+sudo cat $(cat /etc/passwd | grep ^www-data | cut -d: -f6)/.ssh/id_rsa.pub
+```
 
 
 ### Helpful Commands
