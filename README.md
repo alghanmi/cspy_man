@@ -32,7 +32,7 @@ sudo usermod -d /home/www www-data
 ```
   + `WEBSITE_REPO` - [course_website](https://github.com/usc-csci201-fall2013/course_website) git repo
     * `www-data` must have read/write access to the repo
-```shell
+```
 git clone git@github.com:usc-csci201-fall2013/course_website.git
 cd course_website
 git checkout -b deploy remotes/origin/deploy
@@ -46,7 +46,7 @@ sudo chown -R www-data:www-data $WORKSPACE
   + `SSH_REMOTE_USER` - username on `aludra`
   + `SSH_REMOTE_SERVER` - default: `aludra.usc.edu`
   + Generate SSH Keys for `www-data` (with **no passphrase**)
-```shell
+```
 #Generate Keyparis
 ssh-keygen -t rsa -b 4096 -C "www-data@$(hostname -f)"
 ```
