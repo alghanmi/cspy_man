@@ -13,7 +13,7 @@ You are receiving this email because the commit had the following author informa
 	GitHub Username: $GH_USERNAME$
 
 For diagnostic reasons, the following is a log of the script output:
-	<code>$SCRIPT_LOG$</code>
+<code>$SCRIPT_LOG$</code>
 
 Take care,
 Rami's bot
