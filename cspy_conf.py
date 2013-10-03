@@ -17,6 +17,10 @@ class cspy_conf:
 		self.email_tls = self.parse_option(conf_parser, 'email', 'tls')
 		self.email_replyto = self.parse_option(conf_parser, 'email', 'reply-to')
 		
+		#GitHub Details
+		self.github_username = self.parse_option(conf_parser, 'github', 'username')
+		self.github_password = self.parse_option(conf_parser, 'github', 'password')
+		
 		#Email templates
 		self.templates = self.list_to_dict(self.parse_section(conf_parser, 'email templates'))
 

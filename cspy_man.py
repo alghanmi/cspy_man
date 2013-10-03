@@ -73,6 +73,18 @@ def deploy():
 		''' GET Request processing '''
 		return 'GET request not supported'
 
+'''
+Hook to log commit messages from GitHub
+'''
+@app.route('/log', methods=['GET', 'POST'])
+def deploy():
+	if request.method == 'POST':
+		return 'POST request processed, check logs'
+	else:
+		''' GET Request processing '''
+		return 'GET request not supported'
+
+
 
 if __name__ == '__main__':
 	#app.debug = True
