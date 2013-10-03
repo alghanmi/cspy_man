@@ -1,0 +1,20 @@
+## Email template to confirm submission of assignment
+#
+#SUBJECT: [CSCI 201] Assignment Submission Confirmation
+Greetings from alghanmi-bot,
+
+At the assignment's deadline, I started collecting information about your submission to report to my masters so they could start grading your assignment.
+
+Here is the information I will report about you:
+	Name: $FIRST_NAME$ $LAST_NAME$
+	USC Email: $USC_USERNAME$@usc.edu
+	GitHub Account: <a href="https://github.com/$GH_USERNAME$">$GH_USERNAME$</a>
+
+I will, also, report this as your submission of record:
+	Repository: <a href="https://github.com/$REPO_URL$">$ORG_NAME$/$REPO_NAME$</a>
+	SHA: <a href="$COMMIT_URL$">$COMMIT_ID$</a>
+	Committed on: $COMMIT_TIMESTAMP$
+
+Take care,
+Rami's bot
+
