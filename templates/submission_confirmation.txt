@@ -6,14 +6,15 @@ Greetings from alghanmi-bot,
 At the assignment's deadline, I started collecting information about your submission to report to my masters so they could start grading your assignment.
 
 Here is the information I will report about you:
-	Name: $FIRST_NAME$ $LAST_NAME$
-	USC Email: $USC_USERNAME$@usc.edu
-	GitHub Account: <a href="https://github.com/$GH_USERNAME$">$GH_USERNAME$</a>
+	Name: <b>$FIRST_NAME$ $LAST_NAME$</b>
+	USC Email: <b>$USC_USERNAME$@usc.edu</b>
+	GitHub Account: <b><a href="https://github.com/$GH_USERNAME$">$GH_USERNAME$</a></b>
 
 I will, also, report this as your submission of record:
-	Repository: <a href="https://github.com/$REPO_URL$">$ORG_NAME$/$REPO_NAME$</a>
-	SHA: <a href="$COMMIT_URL$">$COMMIT_ID$</a>
-	Committed on: $COMMIT_TIMESTAMP$
+	Repository: <b><a href="https://github.com/$REPO_URL$">$ORG_NAME$/$REPO_NAME$</a></b>
+	SHA: <b><a href="$COMMIT_URL$">$COMMIT_ID$</a></b>
+	Committed on: <b>$COMMIT_TIMESTAMP$</b>
+	Commit Message: <b>$COMMIT_COMMENT$</b>
 
 Take care,
 Rami's bot
