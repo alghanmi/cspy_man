@@ -14,8 +14,31 @@
   1. Update `cspy_man.conf.ini` to reflect your configuration
   1. Install [required software](https://github.com/alghanmi/git_hook#setup)
   1. Configure your [web server](https://github.com/alghanmi/git_hook/blob/master/README.md#nginx-configuration)
-  1. Configure [supervisor](https://github.com/alghanmi/git_hook#supervisor-configuration)
+  ```nginx
+location = /git { rewrite ^ /git/; }
+location /git { try_files $uri @git; }
+location @git {
+      include uwsgi_params;
+      uwsgi_param SCRIPT_NAME /git;
+      uwsgi_modifier1 30;
+      uwsgi_pass unix:/tmp/uwsgi-cspy_man.uwsgi.sock;
+}
 
+  ```
+  1. Configure [supervisor](https://github.com/alghanmi/git_hook#supervisor-configuration)
+  ```ini
+[program:cspy_man]
+command=/usr/local/bin/uwsgi --ini /home/www/usc.alghanmi.org/cspy_man/cspy_man.uwsgi.ini
+directory=/home/www/usc.alghanmi.org/cspy_man
+;user=www-data
+numprocs=1
+autostart=true
+autorestart=true
+stdout_logfile=/home/www/usc.alghanmi.org/logs/uwsgi-supervisord.log
+redirect_stderr=true
+stopsignal=INT
+
+  ```
 
 ##Implemented Services:
 ### Website Deploy `/deploy`
