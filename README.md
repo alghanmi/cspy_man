@@ -50,12 +50,13 @@ This is written as a git [post-receive hook](https://help.github.com/articles/po
 ####Deployment script
 `website_deploy.sh` is written to be compatible with `aludra.usc.edu` and must have the following variables properly set:
   + `$HOME` directory for the `www-data` user. You can set that by
-```
+```bash
 sudo usermod -d /home/www www-data
 ```
   + `WEBSITE_REPO` - [course_website](https://github.com/usc-csci201-fall2013/course_website) git repo
     * `www-data` must have read/write access to the repo
-```
+
+```bash
 git clone git@github.com:usc-csci201-fall2013/course_website.git
 cd course_website
 git checkout -b deploy remotes/origin/deploy
@@ -66,15 +67,19 @@ sudo mkdir -p $WORKSPACE
 sudo mv course_website $WORKSPACE
 sudo chown -R www-data:www-data $WORKSPACE
 ```
+
   + `SSH_REMOTE_USER` - username on `aludra`
   + `SSH_REMOTE_SERVER` - default: `aludra.usc.edu`
   + Generate SSH Keys for `www-data` (with **no passphrase**)
-```
+
+```bash
 #Generate Keyparis
 ssh-keygen -t rsa -b 4096 -C "www-data@$(hostname -f)"
 ```
+
   + Add the public key to [GitHub](https://github.com/settings/ssh) and aludra's authorized keys
-```
+
+```bash
 sudo cat $(cat /etc/passwd | grep ^www-data | cut -d: -f6)/.ssh/id_rsa.pub
 ```
 
