@@ -77,7 +77,7 @@ def deploy():
 Hook to log commit messages from GitHub
 '''
 @app.route('/log', methods=['GET', 'POST'])
-def deploy():
+def log():
 	if request.method == 'POST':
 		return 'POST request processed, check logs'
 	else:
