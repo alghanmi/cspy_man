@@ -38,7 +38,13 @@ stdout_logfile=/home/www/usc.alghanmi.org/logs/uwsgi-supervisord.log
 redirect_stderr=true
 stopsignal=INT
 
-  ```
+```
+  1. Install `c(s, py | man)`
+```bash
+cd
+git clone git@github.com:usc-csci201-fall2013/cspy_man.git
+sudo chown -R $USER:www-data cspy_man
+sudo mv cspy_man /home/www/usc.alghanmi.org/
 
 ##Implemented Services:
 ### Website Deploy `/deploy`
@@ -74,7 +80,7 @@ sudo chown -R www-data:www-data $WORKSPACE
 
 ```bash
 #Generate Keyparis
-ssh-keygen -t rsa -b 4096 -C "www-data@$(hostname -f)"
+sudo su - www-data -c 'ssh-keygen -t rsa -b 4096 -C "www-data@$(hostname -f)"'
 ```
 
   + Add the public key to [GitHub](https://github.com/settings/ssh) and aludra's authorized keys
