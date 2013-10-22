@@ -45,6 +45,7 @@ cd
 git clone git@github.com:usc-csci201-fall2013/cspy_man.git
 sudo chown -R $USER:www-data cspy_man
 sudo mv cspy_man /home/www/usc.alghanmi.org/
+```
 
 ##Implemented Services:
 ### Website Deploy `/deploy`
@@ -89,6 +90,11 @@ sudo su - www-data -c 'ssh-keygen -t rsa -b 4096 -C "www-data@$(hostname -f)"'
 sudo cat $(cat /etc/passwd | grep ^www-data | cut -d: -f6)/.ssh/id_rsa.pub
 ```
 
+  + Disable Host Key Checking
+  
+```bash
+sudo su - www-data -c 'echo -e "Host*\n\tStrictHostKeyChecking no" | sudo tee -a $(cat /etc/passwd | grep ^www-data | cut -d: -f6)/.ssh/config'
+```
 
 ### Helpful Commands
   + Turn off the app and all its services
