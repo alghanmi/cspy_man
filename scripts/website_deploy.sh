@@ -4,9 +4,12 @@ WORKSPACE=/home/www/usc.alghanmi.org/cspy_man_workspace
 WEBSITE_REPO=$WORKSPACE/course_website
 SCRIPT_TIMESTAMP=$(date +%Y-%m-%d_%H%M%S)
 
-SSH_REMOTE_USER='csci201'
+SSH_REMOTE_USER='csci104'
 SSH_REMOTE_SERVER='aludra.usc.edu'
 SSH_REMOTE_COMMAND='umask 022 && source /usr/usc/git/default/setup.csh && cd public_html && git pull --quiet'
+
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
 
 #Access Repo and make up to date
 cd $WEBSITE_REPO
