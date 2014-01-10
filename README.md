@@ -44,8 +44,8 @@ autorestart=true
 stdout_logfile=/home/www/usc.alghanmi.org/logs/uwsgi-supervisord.log
 redirect_stderr=true
 stopsignal=INT
-
 ```
+
   1. Install `c(s, py | man)`
   
 ```bash
