@@ -5,6 +5,12 @@
 ###Setup & Installation
 `c(s, py | man)` is based on the the [git_hook](https://github.com/alghanmi/git_hook) Flask app. For detailed installation and setup instructions, follow the steps outlined in that repo's [readme](https://github.com/alghanmi/git_hook/blob/master/README.md) file.
 
+####Extra Packages
+Due to issues with sending bulk email, we are currently using [Mandrill](https://mandrill.com/) and its API to send emails. To install Mandrill, you run:
+```bash
+sudo pip install mandrill
+```
+
 ####Configuration
   + `cspy_man.uwsgi.ini` - used to deploy the webapp _( no need to edit this file )_
   + `cspy_man.conf.ini` - used to configure the app behaviours _( **must** edit )_
