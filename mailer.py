@@ -10,7 +10,7 @@ class mailer:
 
 	def create_header(self, subject, to):
 		headers = []
-		headers.append('From: ' + self.conf.email_from)
+		headers.append('From: ' + '{} <{}>'.format(self.conf.email_from_name, self.conf.email_from_email))
 		headers.append('Subject: ' + subject)
 		headers.append('to: ' + to)
 		if self.conf.email_replyto is not None:

@@ -13,9 +13,11 @@ class cspy_conf:
 		self.email_port = self.parse_option(conf_parser, 'email', 'port')
 		self.email_username = self.parse_option(conf_parser, 'email', 'username')
 		self.email_password = self.parse_option(conf_parser, 'email', 'password')
-		self.email_from = self.parse_option(conf_parser, 'email', 'from')
+		self.email_from_email = self.parse_option(conf_parser, 'email', 'from_email')
+		self.email_from_name = self.parse_option(conf_parser, 'email', 'from_name')
 		self.email_tls = self.parse_option(conf_parser, 'email', 'tls')
 		self.email_replyto = self.parse_option(conf_parser, 'email', 'reply-to')
+		self.mandrill_api = self.parse_option(conf_parser, 'email', 'mandrill_api')
 		
 		#GitHub Details
 		self.github_username = self.parse_option(conf_parser, 'github', 'username')
