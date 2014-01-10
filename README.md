@@ -32,6 +32,7 @@ location @git {
 
   ```
   1. Configure [supervisor](https://github.com/alghanmi/git_hook#supervisor-configuration)
+  
   ```ini
 [program:cspy_man]
 command=/usr/local/bin/uwsgi --ini /home/www/usc.alghanmi.org/cspy_man/cspy_man.uwsgi.ini
@@ -46,6 +47,7 @@ stopsignal=INT
 
 ```
   1. Install `c(s, py | man)`
+  
 ```bash
 cd
 git clone git@github.com:usc-csci201-fall2013/cspy_man.git
