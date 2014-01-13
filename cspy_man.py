@@ -64,8 +64,37 @@ def deploy():
 		tp = template_parser(conf.templates['website_deploy'])
 		tp.replace(tags)
 		
-		mail = mailer(conf)
-		mail.send(tp.get_subject(), payload.author_emailstring, tp.get_body())
+		#mail = mailer(conf)
+		#mail.send(tp.get_subject(), payload.author_emailstring, tp.get_body())
+		
+		mailrequest = {
+			'key': '{}'.format(conf.mandrill_api),
+			'message': {
+				'subject': '{}'.format(tp.get_subject()),
+				'html'   : '{}'.format(tp.get_body()),
+			
+				'from_email': '{}'.format(conf.email_from_email),
+				'from_name' : '{}'.format(conf.email_from_name),
+			
+				'to': [
+					{
+						'email': '{}'.format(payload.author_email),
+						'name' : '{}'.format(payload.author_name),
+					}
+				],
+			
+				'headers': {
+					'Reply-To': '{}'.format(conf.email_replyto)
+				},
+			},
+		}
+	
+	
+		r = requests.post('https://mandrillapp.com/api/1.0/messages/send.json', data=simplejson.dumps(mailrequest))
+		rres = simplejson.loads(r.content)
+		if rres is not None and rres[0]['status'] != 'sent':
+			print '[ERROR][MANDRILL][{}] {} - {}'.format(rres[0]['status'], rres[0]['reject_reason'], rres[0]['email'])
+		
 		
 		return 'POST request processed, check logs'
 	
