@@ -110,7 +110,7 @@ for s in ssubmissions:
   + Committed on: **{}**
   + Commit Message: **{}**
 
-> if you wish to make a late submission, please follow the [submission instructions](http://www-scf.usc.edu/~csci104/assignments/submission-instructions.html) on the course website
+> if you wish to make a late submission, please **ignore** this issue, close it and follow the [submission instructions](http://www-scf.usc.edu/~csci104/assignments/submission-instructions.html) on the course website.
 
 > This is an issue on your GitHub repository issue tracker. Make sure you close this issue after confirming the information in it is correct.""".format(ssubmissions[s].commit_sha, convertTime(ssubmissions[s].commit_timestamp), ssubmissions[s].commit_message.encode("utf8"))
 	res = gh.post('https://api.github.com/repos/{}/{}/issues'.format(ssubmissions[s].repo_org, ssubmissions[s].repo_name), issue)
