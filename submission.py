@@ -1,8 +1,8 @@
 class submission:
 	def __init__(self):
-		self.last_name = None
-		self.first_name = None
-		self.usc_username = None
+		#self.last_name = None
+		#self.first_name = None
+		#self.usc_username = None
 		
 		self.github_username = None
 		

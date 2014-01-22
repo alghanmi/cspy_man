@@ -1,3 +1,23 @@
+"""Grab Submissions - Get the submissions in the form of a submodule
+ 
+Grab student submissions from GitHub using the GitHub API
+ 
+Usage:
+	grab_submissions.py <hw_title> <file_name>
+	grab_submissions.py -h | --help
+	grab_submissions.py --version
+ 
+Arguments:
+	<file_name>		the file containing the the repository information the file is in csv format
+	<hw_title>		the name of the hw assignment
+ 
+Options:
+	-h --help		Show this screen
+	--version		Show version
+ 
+"""
+
+
 import sys
 
 import simplejson
@@ -5,7 +25,6 @@ from subprocess import CalledProcessError, check_output
 
 from github_payload import github_payload
 from cspy_conf import cspy_conf
-#from mailer import mailer
 from github import github
 from template_parser import template_parser
 
@@ -17,20 +36,21 @@ from submission import submission
 import csv
 import time
 
+from docopt import docopt
+
 import requests
-import mandrill
 
 import traceback
-
 
 def convertTime(time_string):
 	utc = datetime.datetime.strptime(time_string, '%Y-%m-%dT%H:%M:%SZ')
 	utc = utc.replace(tzinfo=tz.gettz('UTC'))
 	return utc.astimezone(tz.gettz('America/Los_Angeles'))
 
+args = docopt(__doc__, version='Grab Submissions v1.0')
+
 ''' Load Configuration '''
 conf = cspy_conf('cspy_man.conf.ini')
-mandrill_client = mandrill.Mandrill(conf.mandrill_api)
 
 ''' Initialize Scripts '''
 current_time = datetime.datetime.now()
@@ -39,41 +59,36 @@ gh = github(conf.github_username, conf.github_password)
 ssubmissions = {}
 
 ''' Read Repo Details '''
-repo_file = 'repos.csv'
-rfile  = open(repo_file, 'r')
+with open(args['<file_name>'], 'r') as repo_file:
+	submodule_file = '{}_{}.submodule.log'.format(repo_file, filestring_time)
+	sfile  = open(submodule_file, 'w')
 
-submodule_file = '{}_{}.submodule.log'.format(repo_file, filestring_time)
-sfile  = open(submodule_file, 'w')
-
-reader = csv.reader(rfile)
-row_count = 0
-for row in reader:
-	if len(row) == 0:
-		continue;
+	reader = csv.reader(repo_file)
+	row_count = 0
+	for row in reader:
+		if len(row) == 0:
+			continue;
 	
-	elif row[0].strip().startswith("#"):
-		continue;
-	else:
-		row_count = row_count + 1
-		if row_count == 1:
-			continue
+		elif row[0].strip().startswith("#"):
+			continue;
 		else:
+			row_count = row_count + 1
 			res = {}
 			try:
 				ss = submission()
-				ss.last_name = row[0].strip()
-				ss.first_name = row[1].strip()
-				ss.usc_username = row[2].strip()
-				ss.github_username = row[3].strip()
-				ss.repo_org = row[4].strip()
-				ss.repo_name = row[5].strip()
-				
+				#ss.last_name = row[0].strip()
+				#ss.first_name = row[1].strip()
+				#ss.usc_username = row[2].strip()
+				ss.github_username = row[2].strip()
+				ss.repo_org = row[0].strip()
+				ss.repo_name = row[1].strip()
+			
 				res = gh.get('https://api.github.com/repos/{}/{}/commits'.format(ss.repo_org, ss.repo_name), False)
 				ss.commit_sha = res[0]['sha']
 				ss.commit_url = res[0]['html_url']
 				ss.commit_timestamp = res[0]['commit']['committer']['date']
 				ss.commit_message   = res[0]['commit']['message']
-				
+			
 				if res[0]['committer'] is not None:
 					ss.commit_committer = res[0]['committer']['login']
 				else:
@@ -84,59 +99,23 @@ for row in reader:
 				print '[ERROR][ROW {}] {}'.format(row_count, row)
 				#traceback.print_exc()
 
-sfile.close()
-
-''' Send Emails'''
+''' Create Issues on GitHub '''
 s_count = 0
 for s in ssubmissions:
-	try:
-		#Prepare & Send Submission Email
-		tags = {}
-		tags['FIRST_NAME'] = ssubmissions[s].first_name
-		tags['LAST_NAME'] = ssubmissions[s].last_name
-		tags['REPO_NAME'] = ssubmissions[s].repo_name
-		tags['USC_USERNAME'] = ssubmissions[s].usc_username
-		tags['GH_USERNAME'] = ssubmissions[s].github_username
-		tags['REPO_URL'] = '{}/{}'.format(ssubmissions[s].repo_org, ssubmissions[s].repo_name)
-		tags['ORG_NAME'] = ssubmissions[s].repo_org
-		tags['REPO_NAME'] = ssubmissions[s].repo_name
-		tags['COMMIT_URL'] = ssubmissions[s].commit_url
-		tags['COMMIT_ID'] = ssubmissions[s].commit_sha
-		tags['COMMIT_COMMENT'] = ssubmissions[s].commit_message.encode("utf8")
-		tags['COMMIT_TIMESTAMP'] = convertTime(ssubmissions[s].commit_timestamp)
-	
-		tp = template_parser(conf.templates['confirm_submission'])
-		tp.replace(tags)
+	issue = { }
+	issue['title'] = 'Submission Confirmation for {}'.format(args['<hw_title>'])
+	issue['assignee'] = ssubmissions[s].github_username
+	issue['body'] = """At the assignment's deadline, I started collecting information about your submission to report to my masters so they could start grading your assignment. I will report this as your submission of record:
+  + Commit ID: **{}**
+  + Committed on: **{}**
+  + Commit Message: **{}**
 
-		mailrequest = {
-			'key': '{}'.format(conf.mandrill_api),
-			'message': {
-				'subject': '{}'.format(tp.get_subject()),
-				'html'   : '{}'.format(tp.get_body()),
-			
-				'from_email': '{}'.format(conf.email_from_email),
-				'from_name' : '{}'.format(conf.email_from_name),
-			
-				'to': [
-					{
-						'email': '{}@usc.edu'.format(ssubmissions[s].usc_username),
-						'name' : '{}{}'.format(ssubmissions[s].first_name, ssubmissions[s].last_name),
-					}
-				],
-			
-				'headers': {
-					'Reply-To': '{}'.format(conf.email_replyto)
-				},
-			},
-		}
-	
-	
-		r = requests.post('https://mandrillapp.com/api/1.0/messages/send.json', data=simplejson.dumps(mailrequest))
-		rres = simplejson.loads(r.content)
-		if rres is not None and rres[0]['status'] != 'sent':
-			print '[ERROR][MANDRILL][{}] {} - {}'.format(rres[0]['status'], rres[0]['reject_reason'], rres[0]['email'])
+> if you wish to make a late submission, please follow the [submission instructions](http://www-scf.usc.edu/~csci104/assignments/submission-instructions.html) on the course website
 
-	except:
+> This is an issue on your GitHub repository issue tracker. Make sure you close this issue after confirming the information in it is correct.""".format(ssubmissions[s].commit_sha, convertTime(ssubmissions[s].commit_timestamp), ssubmissions[s].commit_message.encode("utf8"))
+	res = gh.post('https://api.github.com/repos/{}/{}/issues'.format(ssubmissions[s].repo_org, ssubmissions[s].repo_name), issue)
+	
+	if res is None:
 		#print ssubmissions[s].__dict__
-		print '[ERROR][EMAIL] {} {} <{}@usc.edu>'.format(ssubmissions[s].first_name, ssubmissions[s].last_name, ssubmissions[s].usc_username)
+		print '[ERROR][ISSUE] {}/{} https://github.com/{}'.format(ssubmissions[s].repo_org, ssubmissions[s].repo_name, ssubmissions[s].github_username)
 

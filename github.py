@@ -25,5 +25,19 @@ class github:
 			print "[ERROR] Bad Request. Status Code", r.status_code
 			return None
 	
-
+	def post(self, url, payload):
+		''' Send a POST request to GitHub via API '''
+		r = requests.post(url, data=simplejson.dumps(payload), auth=(self.username, self.password))
+		res = simplejson.loads(r.content)
 		
+		if r.status_code == 201:
+			return res
+
+		else:
+			details = ""
+			if 'errors' in res:
+				for e in res['errors']:
+					details += "{}.{}: {}.".format(e['resource'], e['field'], e['code'])
+			print "[ERROR][HTTP {}] {} - {}".format(r.status_code, res["message"], details)
+			return None
+
