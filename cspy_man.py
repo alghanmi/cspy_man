@@ -107,6 +107,17 @@ Hook to log commit messages from GitHub
 @app.route('/log', methods=['GET', 'POST'])
 def log():
 	if request.method == 'POST':
+		#Parse GitHub payload
+		#post_data = simplejson.loads(request.form['payload'])
+		##Uncomment for local testing
+		post_data = simplejson.loads(request.data)
+		##app.logger.debug(post_data)
+		payload = github_payload(post_data)
+		
+		#for c in payload.commits:
+			
+		
+		
 		return 'POST request processed, check logs'
 	else:
 		''' GET Request processing '''

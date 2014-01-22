@@ -19,7 +19,8 @@ class github_payload:
 		self.commits = [ ]
 		#Getting individual commit information
 		for c in payload['commits']:
-			commit = github_commit(c['id'], c['message'], c['timestamp'], c['url'], c['author']['name'], c['author']['email'], c['author']['username'])
+			gcommit = github_commit(c['id'], c['message'], c['timestamp'], c['url'], c['author']['name'], c['author']['email'], c['author']['username'])
+			self.commits.append(gcommit)			
 		
 		#Author information -- name, email and GitHub username for author of latest/head commit
 		self.author_name = payload['head_commit']['author']['name']
@@ -39,4 +40,4 @@ class github_commit:
 		self.author_name = author_name
 		self.author_email = author_email
 		self.author_gh_username = author_gh_username
-	
+
