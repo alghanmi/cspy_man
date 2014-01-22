@@ -4,6 +4,7 @@ from flask import Flask
 from flask import request
 
 import simplejson
+import requests
 from subprocess import CalledProcessError, check_output
 
 from github_payload import github_payload
@@ -33,7 +34,9 @@ def deploy():
 		''' POST Request processing '''
 		#Parse GitHub payload
 		post_data = simplejson.loads(request.form['payload'])
-		#app.logger.debug(post_data)
+		##Uncomment for local testing
+		##post_data = simplejson.loads(request.data)
+		##app.logger.debug(post_data)
 		payload = github_payload(post_data)
 		
 		''' Execute deployment script '''
@@ -64,9 +67,6 @@ def deploy():
 		tp = template_parser(conf.templates['website_deploy'])
 		tp.replace(tags)
 		
-		#mail = mailer(conf)
-		#mail.send(tp.get_subject(), payload.author_emailstring, tp.get_body())
-		
 		mailrequest = {
 			'key': '{}'.format(conf.mandrill_api),
 			'message': {
@@ -88,8 +88,7 @@ def deploy():
 				},
 			},
 		}
-	
-	
+		
 		r = requests.post('https://mandrillapp.com/api/1.0/messages/send.json', data=simplejson.dumps(mailrequest))
 		rres = simplejson.loads(r.content)
 		if rres is not None and rres[0]['status'] != 'sent':
