@@ -60,7 +60,7 @@ ssubmissions = {}
 
 ''' Read Repo Details '''
 with open(args['<file_name>'], 'r') as repo_file:
-	submodule_file = '{}_{}.submodule.log'.format(repo_file, filestring_time)
+	submodule_file = '{}_{}.submodule.log'.format(args['<file_name>'], filestring_time)
 	sfile  = open(submodule_file, 'w')
 
 	reader = csv.reader(repo_file)
