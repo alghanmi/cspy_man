@@ -4,12 +4,14 @@ Grab student submissions from GitHub using the GitHub API
  
 Usage:
 	grab_submissions.py <hw_title> <file_name>
+    grab_submissions.py --late <hw_title> <late_file_name>
 	grab_submissions.py -h | --help
 	grab_submissions.py --version
  
 Arguments:
-	<file_name>		the file containing the the repository information the file is in csv format
-	<hw_title>		the name of the hw assignment
+	<file_name>			the file containing the the repository information the file is in csv format (repo-owner, repo-name, github-username)
+    <late_file_name>	the file containing the the repository information the file is in csv format (repo-owner, repo-name, issue-number, late-days, grace-period)
+	<hw_title>			the name of the hw assignment
  
 Options:
 	-h --help		Show this screen
@@ -42,10 +44,33 @@ import requests
 
 import traceback
 
+class submission_type:
+	__doc__ = 'ENUM for submission types'
+	SUBMITTION_ONTIME = 0
+	SUBMITTION_LATE = 1
+
+class submission_info:
+	__doc__ = 'Submission details information'
+	def __init__(self):
+		self.repo_org = None
+		self.repo_name = None
+		self.repo_user = None
+		self.repo_issue = None
+		
+		self.commit_sha = None
+		self.commit_url = None
+		self.commit_timestamp = None
+		self.commit_message   = None
+		
+		self.late = None
+		self.grace_period = None
+
 def convertTime(time_string):
 	utc = datetime.datetime.strptime(time_string, '%Y-%m-%dT%H:%M:%SZ')
 	utc = utc.replace(tzinfo=tz.gettz('UTC'))
 	return utc.astimezone(tz.gettz('America/Los_Angeles'))
+
+
 
 args = docopt(__doc__, version='Grab Submissions v1.0')
 
@@ -58,7 +83,7 @@ filestring_time = current_time.strftime('%Y%m%d%H%M%S')
 gh = github(conf.github_username, conf.github_password)
 ssubmissions = {}
 
-''' Read Repo Details '''
+''' Grab and Report On Time Submissions '''
 with open(args['<file_name>'], 'r') as repo_file:
 	submodule_file = '{}_{}.submodule.log'.format(args['<file_name>'], filestring_time)
 	sfile  = open(submodule_file, 'w')
@@ -76,9 +101,6 @@ with open(args['<file_name>'], 'r') as repo_file:
 			res = {}
 			try:
 				ss = submission()
-				#ss.last_name = row[0].strip()
-				#ss.first_name = row[1].strip()
-				#ss.usc_username = row[2].strip()
 				ss.github_username = row[2].strip()
 				ss.repo_org = row[0].strip()
 				ss.repo_name = row[1].strip()
