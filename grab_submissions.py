@@ -3,8 +3,8 @@
 Grab student submissions from GitHub using the GitHub API
  
 Usage:
-	grab_submissions.py <hw_title> <file_name>
-    grab_submissions.py --late <hw_title> <late_file_name>
+	grab_submissions.py [-n|--dry-run] <hw_title> <file_name>
+    grab_submissions.py [-n|--dry-run] --late <hw_title> <late_file_name>
 	grab_submissions.py -h | --help
 	grab_submissions.py --version
  
@@ -14,6 +14,8 @@ Arguments:
 	<hw_title>			the name of the hw assignment
  
 Options:
+	--late			use the late submission behaviour
+	-n --dry-run	do not perform any write/push operations to GitHub. Instead log the actions
 	-h --help		Show this screen
 	--version		Show version
  
