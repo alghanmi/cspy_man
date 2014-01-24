@@ -1,0 +1,13 @@
+## GitHub issue template to confirm submission of assignment
+#
+#SUBJECT: Submission Confirmation for $HW_TITLE$
+At the assignment's deadline, I started collecting information about your submission to report to my masters so they could start grading your assignment. I will report this as your submission of record:
+
+  + Commit ID: **$COMMIT_ID$**
+  + Committed on: **$COMMIT_TIMESTAMP$**
+  + Committed by: **$COMMIT_COMMITTER$**
+  + Commit Message: **$COMMIT_MESSAGE$**
+
+> if you wish to make a late submission, please **ignore** this issue, close it and follow the [submission instructions](http://www-scf.usc.edu/~csci104/assignments/submission-instructions.html) on the course website.
+> This is an issue on your GitHub repository issue tracker. Make sure you close this issue after confirming the information in it is correct.""".format(ss.commit_sha, convertTime(ss.commit_timestamp), ss.commit_committer, ss.commit_message.encode("utf8"))
+			
