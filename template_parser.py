@@ -3,7 +3,7 @@ class template_parser:
 	PREFIX_SUBJECT = '#SUBJECT:'
 	PREFIX_COMMENT = '#'
 	
-	def __init__(self, template_file):
+	def __init__(self, template_file, html=True):
 		#Initalize subject and body
 		self.subject = 'No Subject Specified'
 		self.body = 'No Body Specified'
@@ -21,8 +21,9 @@ class template_parser:
 			elif t.startswith(template_parser.PREFIX_COMMENT):
 				continue
 			else:
-				line = t.replace('\n', '<br/>')
-				line = line.replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')
+				if html is True:
+					line = t.replace('\n', '<br/>')
+					line = line.replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')
 				body_text.append(line)
 			self.body = ''.join(body_text)
 	
