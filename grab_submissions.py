@@ -235,6 +235,8 @@ if __name__ == '__main__':
 					#Preparer a comment
 					comment = get_latesubmission_issue(ls, args['<hw_title>'])
 					res = gh.post('https://api.github.com/repos/{}/{}/issues/{}/comments'.format(ls.repo_org, ls.repo_name, ls.repo_issue), comment)
+					latesubmission_log.write('cd {}; git fetch --quiet;git checkout --quiet {}; cd ..\n'.format(ls.repo_name, ls.commit_sha))
+					
 				else:
 					print '[LOG][COMMENT ON ISSUE][{}] {}/{} {}'.format(ls.repo_issue, ls.repo_org, ls.repo_name, ls.commit_sha)
 			
@@ -243,3 +245,5 @@ if __name__ == '__main__':
 					print '[ERROR][BAD COMMIT ID] {}/{} {}'.format(ls.repo_org, ls.repo_name, ls.commit_sha)
 				if not valid_issue:
 					print '[ERROR][BAD ISSUE] {}/{} {}'.format(ls.repo_org, ls.repo_name, ls.repo_issue)
+
+		latesubmission_log.close()
