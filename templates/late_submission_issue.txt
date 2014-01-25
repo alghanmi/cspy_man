@@ -1,0 +1,15 @@
+## GitHub issue template to comment on a late submission
+#
+#SUBJECT: None
+As per your request, your **$HW_TITLE$** submission has been noted as _**late**_.
+
+The commit on record is:
+  + Commit ID: **$COMMIT_ID$**
+  + Committed on: **$COMMIT_TIMESTAMP$**
+  + Commit Message: **$COMMIT_MESSAGE$**
+
+$LATE_DAY$
+
+$GRACE_PREIOD$
+
+>This is an issue on your GitHub repository issue tracker. Make sure you close this issue after confirming the information in it is correct. If you find any of this information to be incorrect, please create a private note on [Piazza](https://piazza.com/usc/spring2014/csci104/home) and post it to **both** TAs. Make sure to include a link to this issue in your post.
