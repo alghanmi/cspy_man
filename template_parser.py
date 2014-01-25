@@ -24,6 +24,8 @@ class template_parser:
 				if html is True:
 					line = t.replace('\n', '<br/>')
 					line = line.replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')
+				else:
+					line = t
 				body_text.append(line)
 			self.body = ''.join(body_text)
 	
