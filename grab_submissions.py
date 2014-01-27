@@ -102,7 +102,7 @@ def parse_file(file_name, file_type):
 					submissions.append(ss)
 				except:
 					print '[ERROR][ROW {}] {}'.format(row_count, row)
-					traceback.print_exc()
+					#traceback.print_exc()
 	return submissions
 
 
