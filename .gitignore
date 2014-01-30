@@ -1,6 +1,9 @@
 #Configuration files
 cspy_man.conf.ini
 
+#Database Files
+*.db
+
 #Compiled files
 *.py[cod]
 
