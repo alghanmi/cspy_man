@@ -6,15 +6,17 @@ Usage:
 	data_manager.py github <db_file> --accounts <accounts_file>
 	data_manager.py github <db_file> --teams <teams_file>
 	data_manager.py github <db_file> --repos <repos_file>
+	data_manager.py homework <db_file> --commits <hw_commit_file>
 
 Arguments:
-	<db_file>		the sqlite file to store the roster
-    <roster_file>	GRS roster file
-    <course>		The course id that the rosters belong to
-    <semester>		The semester id using
-    <accounts_file>	CSV file with (usc-account, github_username) records
-    <teams_file>	CSV file with (github_org, usc-account, team_id, team_name) records
-    <repos_file>	CSV file with (github_org, repo-name, usc-account) records
+	<db_file>			The sqlite file to store the roster
+    <roster_file>		GRS roster file
+    <course>			The course id that the rosters belong to
+    <semester>			The semester id using
+    <accounts_file>		CSV file with (github_username, usc-email) records
+    <teams_file>		CSV file with (github_org, team_id, team_name, usc-email) records
+    <repos_file>		CSV file with (github_org, repo-name, repo-clone-url, repo-html-url, usc-email) records
+    <hw_commit_file>	CSV file with (course, semester, homework, github_org, repo-name, commit_id, usc-email) records
 
 Options:
 	-h --help	This screen
@@ -82,7 +84,6 @@ class roster_student:
 		args = (self.usc_id, self.email, self.last_name, self.first_name, self.middle_name, self.major, self.level)
 		return args
 
-
 def get_section_id(file_name):
 	r = re.match('.*\\((.*)\\)\.\w*$', file_name)	
 	section_no = r.group(1)
@@ -131,6 +132,43 @@ def parse_roster_student(csv_reader):
 	
 	return students
 
+def parse_file(file_name):
+	records = []
+	row_count = 0
+	row_tokens = 0
+	with open(file_name, 'r') as records_file:
+		reader = csv.reader(records_file)
+		for row in reader:
+			if len(row) == 0:
+				continue;
+	
+			elif row[0].strip().startswith("#"):
+				continue;
+			else:
+				row_count = row_count + 1
+				if row_tokens != len(row):
+					row_tokens = len(row)
+				try:
+					entry = []
+					for r in row:
+						entry.append(r)					
+					records.append(entry)
+				except:
+					print '[ERROR][ROW {}] {}'.format(row_count, row)
+					#traceback.print_exc()
+	
+	#Check that all rows have the same length
+	is_invalid = False
+	for r in records:
+		if len(r) != row_tokens:
+			is_invalid = True
+	
+	if is_invalid is True:
+		records = None
+		print '[ERROR][Parser] No all rows in {} have the same number of tokens'.format(file_name)
+	
+	return records
+
 def db_update(db, query_values, query):	
 	db.executemany(query, query_values)
 	db.commit()
@@ -139,15 +177,24 @@ def db_select(db, query_values, query):
 	result = db.execute(query, query_values)
 	return result
 
+#INSERT Statements
 QUERY_INSERT_STUDENT = 'INSERT OR REPLACE INTO student(usc_id, email, last_name, first_name, middle_name, major, class) VALUES(?, ?, ?, ?, ?, ?, ?)'
 QUERY_INSERT_ROSTER = 'INSERT OR REPLACE INTO roster(student_id, section_id, semester, is_w, grade_option) VALUES(?, ?, ?, ?, ?)'
+QUERY_INSERT_GH_ACCOUNT = 'INSERT OR REPLACE INTO github_account(student_id, github_username) SELECT usc_id, ? FROM student WHERE email = ?'
+QUERY_INSERT_GH_TEAM = 'INSERT OR REPLACE INTO github_team(student_id, repo_org, org_team_id, org_team_name) SELECT usc_id, ?, ?, ? FROM student WHERE email = ?'
+QUERY_INSERT_GH_REPO = 'INSERT OR REPLACE INTO student_repository(student_id, repo_org, repo_name, repo_clone_url, repo_html_url) SELECT usc_id, ?, ?, ?, ? FROM student WHERE email = ?'
+QUERY_INSERT_HW_COMMIT = 'INSERT OR REPLACE INTO hw_repo_log(course_id, semester, hw_id, student_id, repo_org, repo_name, commit_id) SELECT ?, ?, ?, usc_id, ?, ?, ? FROM student WHERE email = ?'
+
+#DELETE Statements
 QUERY_DELETE_STUDENT_FROM_ROSTER = 'DELETE FROM roster WHERE student_id = ? AND section_id = ? AND semester = ?'
+
+#SELECT Statements
 QUERY_SELECT_STUDENT_IDS_IN_SECTION = 'SELECT student_id FROM roster WHERE section_id = ? AND semester = ?'
 
 if __name__ == '__main__':
 	''' Parse Input Parameters '''
 	args = docopt(__doc__, version='Roster Manager v0.3')
-	pprint(args)
+	#pprint(args)
 	
 	'''Parse roster files'''
 	if args['roster'] is True:
@@ -208,14 +255,59 @@ if __name__ == '__main__':
 				
 
 	elif args['github'] is True:
-		if args['--accounts'] is True:
-			print 'parsing accounts'
+		db = None
+		try:
+			#initiate connection
+			db = sqlite3.connect(args['<db_file>'])
+			db.executescript('PRAGMA foreign_keys = ON;')
+			db_curser = db.cursor()
 		
-		elif args['--teams'] is True:
-			print 'parsing teams'
+			if args['--accounts'] is True:
+				print '[LOG] Parsing accounts file'
+				accounts = parse_file(args['<accounts_file>'])
+				if accounts is not None:
+					print '[LOG] Registering {} accounts'.format(len(accounts))
+					db_update(db, accounts, QUERY_INSERT_GH_ACCOUNT)
+			
+			elif args['--teams'] is True:
+				print '[LOG] Parsing teams file'
+				teams = parse_file(args['<teams_file>'])
+				if teams is not None:
+					print '[LOG] Registering {} teams'.format(len(teams))
+					db_update(db, teams, QUERY_INSERT_GH_TEAM)
+			
+			elif args['--repos'] is True:
+				print '[LOG] Parsing repos file'
+				repos = parse_file(args['<repos_file>'])
+				if repos is not None:
+					print '[LOG] Registering {} repos'.format(len(repos))
+					db_update(db, repos, QUERY_INSERT_GH_REPO)
+		
+		except sqlite3.Error as e:
+			print '[ERROR][SQLITE3] {}'.format(e.args[0])
 	
-		elif args['--repos'] is True:
-			print 'parsing repos'
+		finally:
+			if db is not None:
+				db.close()
+
+	elif args['homework'] is True:
+		db = None
+		try:
+			#initiate connection
+			db = sqlite3.connect(args['<db_file>'])
+			db.executescript('PRAGMA foreign_keys = ON;')
+			db_curser = db.cursor()
+		
+			if args['--commits'] is True:
+				print '[LOG] Parsing commits file'
+				commits = parse_file(args['<hw_commit_file>'])
+				if commits is not None:
+					print '[LOG] Noting {} commits'.format(len(commits))
+					db_update(db, commits, QUERY_INSERT_HW_COMMIT)
+		
+		except sqlite3.Error as e:
+			print '[ERROR][SQLITE3] {}'.format(e.args[0])
 	
-	
-	
+		finally:
+			if db is not None:
+				db.close()
