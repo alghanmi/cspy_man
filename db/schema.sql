@@ -73,6 +73,8 @@ CREATE TABLE IF NOT EXISTS homework (
 	hw_name			CHAR,
 	title			VARCHAR,
 	deadline		CHAR,
+	is_project		INTEGER,
+	repo_prefix		CHAR,
 	
 	PRIMARY KEY(course_id, semester, hw_id),
 	FOREIGN KEY(course_id) REFERENCES course(course_id)
