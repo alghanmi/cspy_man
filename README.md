@@ -92,7 +92,9 @@ sudo chown -R www-data:www-data $WORKSPACE
 sudo su - www-data -c 'ssh-keygen -t rsa -b 4096 -C "www-data@$(hostname -f)"'
 ```
 
-  + Add the public key to [GitHub](https://github.com/settings/ssh) and aludra's authorized keys
+  + Add the public key to:
+    * [GitHub](https://github.com/settings/ssh), and
+    * aludra's authorized keys
 
 ```bash
 sudo cat $(cat /etc/passwd | grep ^www-data | cut -d: -f6)/.ssh/id_rsa.pub
@@ -101,7 +103,7 @@ sudo cat $(cat /etc/passwd | grep ^www-data | cut -d: -f6)/.ssh/id_rsa.pub
   + Disable Host Key Checking
   
 ```bash
-sudo su - www-data -c 'echo -e "Host*\n\tStrictHostKeyChecking no" | sudo tee -a $(cat /etc/passwd | grep ^www-data | cut -d: -f6)/.ssh/config'
+sudo su - www-data -s /bin/bash -c 'echo -e "Host *\n\tStrictHostKeyChecking no" | tee -a $HOME/.ssh/config'
 ```
 
 ### Helpful Commands
