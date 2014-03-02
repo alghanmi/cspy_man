@@ -50,7 +50,7 @@ stopsignal=INT
   
 ```bash
 cd
-git clone git@github.com:usc-csci201-fall2013/cspy_man.git
+git clone git@github.com:usc-csci104-spring2014/cspy_man.git
 sudo chown -R $USER:www-data cspy_man
 sudo mv cspy_man /home/www/usc.alghanmi.org/
 ```
@@ -72,7 +72,7 @@ sudo usermod -d /home/www www-data
     * `www-data` must have read/write access to the repo
 
 ```bash
-git clone git@github.com:usc-csci201-fall2013/course_website.git
+git clone git@github.com:usc-csci104-spring2014/course_website.git
 cd course_website
 git checkout -b deploy remotes/origin/deploy
 git checkout master
@@ -120,4 +120,11 @@ sudo tail -f /home/www/usc.alghanmi.org/logs/error.log /home/www/usc.alghanmi.or
   + Run script as another user
 ```
 sudo su -c "bash /home/www/usc.alghanmi.org/cspy_man/scripts/website_deploy.sh" -s /bin/bash www-data
+```
+
+### Helpful aliases
+
+```bash
+alias cspystatus='sudo su - www-data -c '"'"'cd ~/usc.alghanmi.org/cspy_man; git status'"'"''
+alias cspypull='sudo su - www-data -c '"'"'cd ~/usc.alghanmi.org/cspy_man; git pull'"'"''
 ```
