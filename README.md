@@ -106,6 +106,19 @@ sudo cat $(cat /etc/passwd | grep ^www-data | cut -d: -f6)/.ssh/id_rsa.pub
 sudo su - www-data -s /bin/bash -c 'echo -e "Host *\n\tStrictHostKeyChecking no" | tee -a $HOME/.ssh/config'
 ```
 
+  + Setup git user profile for `www-data` to be the bot
+
+```bash
+sudo su - www-data -s /bin/bash -c ''
+
+git config --global user.name "alghanmi-bot"
+git config --global user.email "alghanmi+bot@usc.edu"
+git config --global core.editor vim
+git config --global merge.tool vimdiff
+git config --global core.autocrlf input
+git config --global push.default simple
+```
+
 ### Helpful Commands
   + Turn off the app and all its services
 ```
