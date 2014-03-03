@@ -33,10 +33,8 @@ def deploy():
 	if request.method == 'POST':
 		''' POST Request processing '''
 		#Parse GitHub payload
-		post_data = simplejson.loads(request.form['payload'])
-		##Uncomment for local testing
-		##post_data = simplejson.loads(request.data)
-		##app.logger.debug(post_data)
+		post_data = simplejson.loads(request.data)
+		#app.logger.debug(post_data)
 		payload = github_payload(post_data)
 		
 		''' Execute deployment script '''
@@ -126,7 +124,5 @@ def log():
 
 
 if __name__ == '__main__':
-	#app.debug = True
-	#app.host = '0.0.0.0'
+	#app.run(host='0.0.0.0', debug=True)
 	app.run()
-
