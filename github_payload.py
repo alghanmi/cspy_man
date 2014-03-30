@@ -40,16 +40,19 @@ class github_commit:
 		self.author_name = author_name
 		self.author_email = author_email
 		self.author_gh_username = author_gh_username
-	'''
-	def __init__(self, payload):
-		self.commit_id = payload['sha']
-		self.commit_message = payload['message']
-		self.commit_timestamp = payload['author']['date']
-		self.commit_url = payload['html_url']
-		self.author_name = payload['author']['name']
-		self.author_email = payload['author']['email']
+	
+	@classmethod
+	def from_payload(cls, payload):
+		''' Generate commit from payload '''
+		commit_id = payload['sha']
+		commit_message = payload['message']
+		commit_timestamp = payload['author']['date']
+		commit_url = payload['html_url']
+		author_name = payload['author']['name']
+		author_email = payload['author']['email']
 
 		#Not part of GitHub API single commit payload
 		#http://developer.github.com/v3/git/commits/#get-a-commit
-		self.author_gh_username = None
-	'''
+		author_gh_username = None
+	
+		return cls(commit_id, commit_message, commit_timestamp, commit_url, author_name, author_email, author_gh_username)

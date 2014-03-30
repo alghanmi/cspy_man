@@ -162,7 +162,8 @@ def confirm_commit(gh, submission):
 	if res is None:
 		return False
 	else:
-		commit = github_commit(res)
+		
+		commit = github_commit.from_payload(res)
 		submission.commit_sha = commit.commit_id
 		submission.commit_url = commit.commit_url
 		submission.commit_timestamp = commit.commit_timestamp
