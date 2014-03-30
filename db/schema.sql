@@ -120,6 +120,7 @@ CREATE TABLE IF NOT EXISTS hw_repo_log (
 	repo_name		CHAR,
 	
 	commit_id		CHAR,
+	is_late			INTEGER,
 	
 	--not referencing roster because some students may drop the course (before W) but still have repos.
 	--not referencing section because students may move sections (before W)

@@ -183,7 +183,7 @@ QUERY_INSERT_ROSTER = 'INSERT OR REPLACE INTO roster(student_id, section_id, sem
 QUERY_INSERT_GH_ACCOUNT = 'INSERT OR REPLACE INTO github_account(student_id, github_username) SELECT usc_id, ? FROM student WHERE email = ?'
 QUERY_INSERT_GH_TEAM = 'INSERT OR REPLACE INTO github_team(student_id, repo_org, org_team_id, org_team_name) SELECT usc_id, ?, ?, ? FROM student WHERE email = ?'
 QUERY_INSERT_GH_REPO = 'INSERT OR REPLACE INTO student_repository(student_id, repo_org, repo_name, repo_clone_url, repo_html_url) SELECT usc_id, ?, ?, ?, ? FROM student WHERE email = ?'
-QUERY_INSERT_HW_COMMIT = 'INSERT OR REPLACE INTO hw_repo_log(course_id, semester, hw_id, student_id, repo_org, repo_name, commit_id) SELECT ?, ?, ?, usc_id, ?, ?, ? FROM student WHERE email = ?'
+QUERY_INSERT_HW_COMMIT = 'INSERT OR REPLACE INTO hw_repo_log(course_id, semester, hw_id, student_id, repo_org, repo_name, commit_id, is_late) SELECT ?, ?, ?, usc_id, ?, ?, ?, 1 FROM student WHERE email = ?'
 
 #DELETE Statements
 QUERY_DELETE_STUDENT_FROM_ROSTER = 'DELETE FROM roster WHERE student_id = ? AND section_id = ? AND semester = ?'
