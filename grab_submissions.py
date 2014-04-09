@@ -131,7 +131,8 @@ def get_confirmation_issue(submission, hw_title):
 	tp.replace(tags)
 	issue = {}
 	issue['title'] = tp.get_subject()
-	issue['assignee'] = submission.repo_user
+	if submission.repo_user != '<NONE>':
+		issue['assignee'] = submission.repo_user
 	issue['body'] = tp.get_body()
 	
 	return issue
