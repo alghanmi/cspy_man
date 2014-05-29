@@ -42,6 +42,7 @@ import time
 
 import traceback
 from pprint import pprint
+from urlparse import urlparse
 
 class submission:
 	__doc__ = 'Submission details information'
