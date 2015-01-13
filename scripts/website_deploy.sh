@@ -1,6 +1,7 @@
 #!/bin/bash
 
-WORKSPACE=/home/www/usc.alghanmi.org/cspy_man_workspace
+WORKSPACE_HOME=/home/www/website_url
+WORKSPACE=$WORKSPACE_HOME/cspy_man_workspace
 WEBSITE_REPO=$WORKSPACE/course_website
 SCRIPT_TIMESTAMP=$(date +%Y-%m-%d_%H%M%S)
 

@@ -14,6 +14,7 @@ sudo pip install mandrill
 ####Configuration
   + `cspy_man.uwsgi.ini` - used to deploy the webapp _( no need to edit this file )_
   + `cspy_man.conf.ini` - used to configure the app behaviours _( **must** edit )_
+  + `$WEBSITE_NAME` - is a variable that should be replaced with the actual website name
 
 ####Basic Setup
   1. Rename `cspy_man.conf.sample.ini` to `cspy_man.conf.ini`
@@ -35,13 +36,13 @@ location @git {
   
   ```ini
 [program:cspy_man]
-command=/usr/local/bin/uwsgi --ini /home/www/usc.alghanmi.org/cspy_man/cspy_man.uwsgi.ini
-directory=/home/www/usc.alghanmi.org/cspy_man
+command=/usr/local/bin/uwsgi --ini /home/www/$WEBSITE_NAME/cspy_man/cspy_man.uwsgi.ini
+directory=/home/www/$WEBSITE_NAME/cspy_man
 ;user=www-data
 numprocs=1
 autostart=true
 autorestart=true
-stdout_logfile=/home/www/usc.alghanmi.org/logs/uwsgi-supervisord.log
+stdout_logfile=/home/www/$WEBSITE_NAME/logs/uwsgi-supervisord.log
 redirect_stderr=true
 stopsignal=INT
 ```
@@ -52,7 +53,7 @@ stopsignal=INT
 cd
 git clone git@github.com:usc-csci104-spring2014/cspy_man.git
 sudo chown -R $USER:www-data cspy_man
-sudo mv cspy_man /home/www/usc.alghanmi.org/
+sudo mv cspy_man /home/www/$WEBSITE_NAME/
 ```
 
 ##Implemented Services:
@@ -77,7 +78,7 @@ cd course_website
 git checkout -b deploy remotes/origin/deploy
 git checkout master
 cd ..
-export WORKSPACE=/home/www/usc.alghanmi.org/cspy_man_workspace
+export WORKSPACE=/home/www/$WEBSITE_NAME/cspy_man_workspace
 sudo mkdir -p $WORKSPACE
 sudo mv course_website $WORKSPACE
 sudo chown -R www-data:www-data $WORKSPACE
@@ -128,16 +129,16 @@ ps -ef | grep -v 'tail -f' |  grep uwsgi && echo '' && ps -ef | grep -v 'tail -f
 ```
   + Check Logs
 ```
-sudo tail -f /home/www/usc.alghanmi.org/logs/error.log /home/www/usc.alghanmi.org/logs/access.log /home/www/usc.alghanmi.org/logs/uwsgi-supervisord.log /var/log/uwsgi/cspy_man.log  /var/log/uwsgi/cspy_man.uwsgi.log  /var/log/supervisor/cspy_man-*.log /var/log/supervisor/supervisord.log
+sudo tail -f /home/www/$WEBSITE_NAME/logs/error.log /home/www/$WEBSITE_NAME/logs/access.log /home/www/$WEBSITE_NAME/logs/uwsgi-supervisord.log /var/log/uwsgi/cspy_man.log  /var/log/uwsgi/cspy_man.uwsgi.log  /var/log/supervisor/cspy_man-*.log /var/log/supervisor/supervisord.log
 ```
   + Run script as another user
 ```
-sudo su -c "bash /home/www/usc.alghanmi.org/cspy_man/scripts/website_deploy.sh" -s /bin/bash www-data
+sudo su -c "bash /home/www/$WEBSITE_NAME/cspy_man/scripts/website_deploy.sh" -s /bin/bash www-data
 ```
 
 ### Helpful aliases
 
 ```bash
-alias cspystatus='sudo su - www-data -c '"'"'cd ~/usc.alghanmi.org/cspy_man; git status'"'"''
-alias cspypull='sudo su - www-data -c '"'"'cd ~/usc.alghanmi.org/cspy_man; git pull'"'"''
+alias cspystatus='sudo su - www-data -c '"'"'cd ~/$WEBSITE_NAME/cspy_man; git status'"'"''
+alias cspypull='sudo su - www-data -c '"'"'cd ~/$WEBSITE_NAME/cspy_man; git pull'"'"''
 ```
